@@ -1,12 +1,12 @@
 # Evaluator Dispatch Prompt Template
 
-Use this when dispatching if-evaluator after completing a task.
+Use this when dispatching easyharness-evaluator after completing a task.
 
 ## Template
 
 task(
   category="unspecified-high",
-  load_skills=["if-evaluator"],
+  load_skills=["easyharness-evaluator"],
   run_in_background=false,
   description="Evaluate Task N: [task name]",
   prompt="""
@@ -26,14 +26,14 @@ task(
     [If retry: include previous evaluator feedback here]
 
     ## Your Job
-    Run 4-layer evaluation (if-evaluator skill):
+    Run 4-layer evaluation (easyharness-evaluator skill):
     1. Automated hard checks (tests, lint, build, regression)
     2. Stub/laziness detection
     3. Contract compliance (line-by-line AC verification)
     4. Quality scoring
     [If contract has UI ACs]: Also run browser QA.
 
-    Return structured JSON verdict according to if-evaluator specification.
+    Return structured JSON verdict according to easyharness-evaluator specification.
     Work from: [project directory]
   """
 )

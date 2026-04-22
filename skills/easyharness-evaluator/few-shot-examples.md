@@ -1,4 +1,4 @@
-# Few-Shot Examples: IF-Evaluator Calibration
+# Few-Shot Examples: EasyHarness-Evaluator Calibration
 
 ## Example 1: PASS — Clean Implementation
 **Scenario**: Implementing a `validateEmail` function with proper regex and unit tests.

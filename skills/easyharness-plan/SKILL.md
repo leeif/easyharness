@@ -1,12 +1,12 @@
 ---
-name: if-plan
+name: easyharness-plan
 description: Use when starting a new feature or project — explores requirements, designs architecture, decomposes into tasks, and generates verifiable contracts for each subtask
 ---
 
-# IF-Plan: Requirements to Contract Pipeline
+# EasyHarness-Plan: Requirements to Contract Pipeline
 
 ## Overview
-- Purpose: Turn vague requirements into a plan + contract that if-develop can execute autonomously
+- Purpose: Turn vague requirements into a plan + contract that easyharness-develop can execute autonomously
 - Outputs: plan.md (implementation plan) + contract.md (per-task acceptance criteria)
 - Core principle: "Every acceptance criterion must be verifiable without human judgment"
 - Flow: explore → design → decompose → contract → self-review
@@ -14,7 +14,7 @@ description: Use when starting a new feature or project — explores requirement
 ## Prerequisites
 - Recommended: superpowers (for brainstorming and writing-plans patterns)
 - Install: https://github.com/obra/superpowers
-- if-plan works standalone but benefits from these methodologies
+- easyharness-plan works standalone but benefits from these methodologies
 
 ## Process Flow
 ```dot
@@ -35,7 +35,7 @@ digraph G {
     UserReviewPlan [label="User reviews plan+contract"];
     Approved [shape=diamond, label="Approved?"];
     SaveFiles [label="Save files"];
-    Ready [shape=doublecircle, label="Ready for if-develop"];
+    Ready [shape=doublecircle, label="Ready for easyharness-develop"];
 
     Start -> Explore;
     Explore -> Clarify;
@@ -130,7 +130,7 @@ After saving, prompt user:
 > "Plan and contract saved. Please review both files before we proceed:
 > - Plan: `<path>`
 > - Contract: `<path>`
-> Ready to start implementation with if-develop?"
+> Ready to start implementation with easyharness-develop?"
 
 ## Common Mistakes
 - Writing vague ACs ("works correctly", "handles errors")

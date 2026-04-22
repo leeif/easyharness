@@ -1,10 +1,10 @@
-# IF-Harness Skills Implementation Plan
+# EasyHarness Skills Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Create three skills (if-plan, if-develop, if-evaluator) that form an automated development harness — from requirements to verified implementation.
+**Goal:** Create three skills (easyharness-plan, easyharness-develop, easyharness-evaluator) that form an automated development harness — from requirements to verified implementation.
 
-**Architecture:** Three skills form a pipeline: if-plan produces a plan + contract, if-develop orchestrates a RALPH loop executing tasks one at a time with evaluator feedback, if-evaluator provides 4-layer automated verification (hard checks → stub detection → contract compliance → quality scoring). The agent running if-develop IS the generator (no subagent dispatch for implementation); only the evaluator is dispatched as a read-only subagent.
+**Architecture:** Three skills form a pipeline: easyharness-plan produces a plan + contract, easyharness-develop orchestrates a RALPH loop executing tasks one at a time with evaluator feedback, easyharness-evaluator provides 4-layer automated verification (hard checks → stub detection → contract compliance → quality scoring). The agent running easyharness-develop IS the generator (no subagent dispatch for implementation); only the evaluator is dispatched as a read-only subagent.
 
 **Tech Stack:** Markdown skills with YAML frontmatter (agentskills.io spec). Prompt templates for evaluator dispatch. Few-shot calibration examples for evaluator.
 
@@ -20,15 +20,15 @@
 
 ## Prerequisites: Dependency Skills Installation
 
-IF-Harness skills depend on skills from two open-source projects. Users must install these before using if-develop or if-evaluator.
+EasyHarness skills depend on skills from two open-source projects. Users must install these before using easyharness-develop or easyharness-evaluator.
 
 ### Required from Superpowers ([github.com/obra/superpowers](https://github.com/obra/superpowers))
 
 Skills referenced:
-- `superpowers:test-driven-development` — TDD cycle in if-develop's ACT phase
-- `superpowers:verification-before-completion` — Final verification in if-develop
-- `superpowers:brainstorming` — Requirements exploration pattern in if-plan
-- `superpowers:writing-plans` — Task decomposition pattern in if-plan
+- `superpowers:test-driven-development` — TDD cycle in easyharness-develop's ACT phase
+- `superpowers:verification-before-completion` — Final verification in easyharness-develop
+- `superpowers:brainstorming` — Requirements exploration pattern in easyharness-plan
+- `superpowers:writing-plans` — Task decomposition pattern in easyharness-plan
 
 **Install (by platform):**
 
@@ -42,7 +42,7 @@ Skills referenced:
 
 ### Required from gstack ([github.com/garrytan/gstack](https://github.com/garrytan/gstack)) — Optional, for Browser QA
 
-Only needed if if-evaluator will run browser-based QA (UI projects).
+Only needed if easyharness-evaluator will run browser-based QA (UI projects).
 
 Skills referenced:
 - `gstack:browse` — Headless browser for UI acceptance criteria verification
@@ -75,37 +75,37 @@ After installation, confirm skills are available:
 ## File Structure
 
 ```
-/root/Github/if-harness/
+/root/Github/easyharness/
 ├── skills/
-│   ├── if-plan/
+│   ├── easyharness-plan/
 │   │   └── SKILL.md                    # Requirements → design → contract generation
-│   ├── if-develop/
+│   ├── easyharness-develop/
 │   │   ├── SKILL.md                    # RALPH loop orchestration
-│   │   └── evaluator-dispatch-prompt.md  # Template for dispatching if-evaluator
-│   └── if-evaluator/
+│   │   └── evaluator-dispatch-prompt.md  # Template for dispatching easyharness-evaluator
+│   └── easyharness-evaluator/
 │       ├── SKILL.md                    # 4-layer evaluation engine
 │       └── few-shot-examples.md        # Calibration examples (PASS/FAIL)
 ├── docs/
 │   └── plans/
-│       └── 2026-04-22-if-harness-skills.md  # This plan
+│       └── 2026-04-22-easyharness-skills.md  # This plan
 └── README.md                           # (not created — user can add later)
 ```
 
 ---
 
-### Task 1: if-evaluator SKILL.md — The 4-Layer Evaluation Engine
+### Task 1: easyharness-evaluator SKILL.md — The 4-Layer Evaluation Engine
 
-**Why first:** if-evaluator is a dependency of if-develop. Writing it first means if-develop can reference its exact interface and output format.
+**Why first:** easyharness-evaluator is a dependency of easyharness-develop. Writing it first means easyharness-develop can reference its exact interface and output format.
 
 **Files:**
-- Create: `skills/if-evaluator/SKILL.md`
+- Create: `skills/easyharness-evaluator/SKILL.md`
 
 - [ ] **Step 1: Write the YAML frontmatter**
 
 ```yaml
 ---
-name: if-evaluator
-description: Use when verifying implementation quality against a contract — dispatched as read-only evaluator in the if-develop RALPH loop, or standalone for post-implementation audits
+name: easyharness-evaluator
+description: Use when verifying implementation quality against a contract — dispatched as read-only evaluator in the easyharness-develop RALPH loop, or standalone for post-implementation audits
 ---
 ```
 
@@ -321,20 +321,20 @@ When the contract includes UI acceptance criteria, add browser verification AFTE
 **Permissions:** Use browse/playwright tools. Still NO file write/edit.
 ```
 
-- [ ] **Step 10: Commit if-evaluator SKILL.md**
+- [ ] **Step 10: Commit easyharness-evaluator SKILL.md**
 
 ```bash
-cd /root/Github/if-harness
-git add skills/if-evaluator/SKILL.md
-git commit -m "feat: add if-evaluator skill — 4-layer automated verification engine"
+cd /root/Github/easyharness
+git add skills/easyharness-evaluator/SKILL.md
+git commit -m "feat: add easyharness-evaluator skill — 4-layer automated verification engine"
 ```
 
 ---
 
-### Task 2: if-evaluator Few-Shot Calibration Examples
+### Task 2: easyharness-evaluator Few-Shot Calibration Examples
 
 **Files:**
-- Create: `skills/if-evaluator/few-shot-examples.md`
+- Create: `skills/easyharness-evaluator/few-shot-examples.md`
 
 - [ ] **Step 1: Write PASS example — Clean implementation**
 
@@ -374,33 +374,33 @@ Key characteristics to demonstrate:
 - [ ] **Step 4: Commit few-shot-examples.md**
 
 ```bash
-cd /root/Github/if-harness
-git add skills/if-evaluator/few-shot-examples.md
+cd /root/Github/easyharness
+git add skills/easyharness-evaluator/few-shot-examples.md
 git commit -m "feat: add evaluator few-shot calibration examples (PASS + 2 FAIL patterns)"
 ```
 
 ---
 
-### Task 3: if-plan SKILL.md — Requirements to Contract Pipeline
+### Task 3: easyharness-plan SKILL.md — Requirements to Contract Pipeline
 
 **Files:**
-- Create: `skills/if-plan/SKILL.md`
+- Create: `skills/easyharness-plan/SKILL.md`
 
 - [ ] **Step 1: Write the YAML frontmatter**
 
 ```yaml
 ---
-name: if-plan
+name: easyharness-plan
 description: Use when starting a new feature or project — explores requirements, designs architecture, decomposes into tasks, and generates verifiable contracts for each subtask
 ---
 ```
 
 - [ ] **Step 2: Write the Overview section**
 
-Core concept: if-plan bridges user intent to machine-verifiable contracts. It combines brainstorming-style requirement exploration with writing-plans-style task decomposition, then adds a novel contract generation layer.
+Core concept: easyharness-plan bridges user intent to machine-verifiable contracts. It combines brainstorming-style requirement exploration with writing-plans-style task decomposition, then adds a novel contract generation layer.
 
 Key content:
-- Purpose: Turn vague requirements into a plan + contract that if-develop can execute autonomously
+- Purpose: Turn vague requirements into a plan + contract that easyharness-develop can execute autonomously
 - Outputs: `plan.md` (implementation plan) + `contract.md` (per-task acceptance criteria)
 - Core principle: "Every acceptance criterion must be verifiable without human judgment"
 - Flow: explore → design → decompose → contract → self-review
@@ -423,7 +423,7 @@ digraph if_plan {
     "Self-review passes?" [shape=diamond];
     "User reviews plan + contract" [shape=diamond];
     "Save plan.md + contract.md" [shape=box];
-    "Ready for if-develop" [shape=doublecircle];
+    "Ready for easyharness-develop" [shape=doublecircle];
 
     "Explore project context" -> "Ask clarifying questions\n(one at a time, prefer multiple choice)";
     "Ask clarifying questions\n(one at a time, prefer multiple choice)" -> "Propose 2-3 approaches\nwith trade-offs";
@@ -438,7 +438,7 @@ digraph if_plan {
     "Self-review passes?" -> "User reviews plan + contract" [label="yes"];
     "User reviews plan + contract" -> "Generate contract\n(per-task ACs)" [label="changes"];
     "User reviews plan + contract" -> "Save plan.md + contract.md" [label="approved"];
-    "Save plan.md + contract.md" -> "Ready for if-develop";
+    "Save plan.md + contract.md" -> "Ready for easyharness-develop";
 }
 \```
 ```
@@ -495,7 +495,7 @@ Follows superpowers:writing-plans conventions.
 **Description:** [What this task does, in 2-3 sentences]
 \```
 
-**Complexity classification** (informs if-develop's retry strategy):
+**Complexity classification** (informs easyharness-develop's retry strategy):
 - **simple**: Single file, clear spec, no integration concerns
 - **medium**: 2-3 files, some integration, moderate logic
 - **complex**: Multi-file, architecture decisions, complex logic or state management
@@ -582,29 +582,29 @@ After saving, present to user:
 > - Plan: `<path>`
 > - Contract: `<path>`
 >
-> Ready to start implementation with if-develop?"
+> Ready to start implementation with easyharness-develop?"
 ```
 
-- [ ] **Step 9: Commit if-plan SKILL.md**
+- [ ] **Step 9: Commit easyharness-plan SKILL.md**
 
 ```bash
-cd /root/Github/if-harness
-git add skills/if-plan/SKILL.md
-git commit -m "feat: add if-plan skill — requirements to contract pipeline"
+cd /root/Github/easyharness
+git add skills/easyharness-plan/SKILL.md
+git commit -m "feat: add easyharness-plan skill — requirements to contract pipeline"
 ```
 
 ---
 
-### Task 4: if-develop SKILL.md — RALPH Loop Orchestration
+### Task 4: easyharness-develop SKILL.md — RALPH Loop Orchestration
 
 **Files:**
-- Create: `skills/if-develop/SKILL.md`
+- Create: `skills/easyharness-develop/SKILL.md`
 
 - [ ] **Step 1: Write the YAML frontmatter**
 
 ```yaml
 ---
-name: if-develop
+name: easyharness-develop
 description: Use when executing an implementation plan with a contract — runs a RALPH loop per task with evaluator feedback, retries, and model escalation
 ---
 ```
@@ -612,13 +612,13 @@ description: Use when executing an implementation plan with a contract — runs 
 - [ ] **Step 2: Write the Overview section**
 
 ```markdown
-# IF-Develop: RALPH Loop Orchestration
+# EasyHarness-Develop: RALPH Loop Orchestration
 
 Execute a plan + contract by iterating through tasks with automated evaluation and feedback.
 
 **Core principle:** Implement one task at a time. After each task, dispatch an evaluator. If FAIL, incorporate feedback and retry. Never move to the next task until the current one passes.
 
-**You ARE the generator.** You implement the code directly — no subagent dispatch for implementation. Only the evaluator is dispatched as a read-only subagent (using if-evaluator skill).
+**You ARE the generator.** You implement the code directly — no subagent dispatch for implementation. Only the evaluator is dispatched as a read-only subagent (using easyharness-evaluator skill).
 
 **RALPH = Reason → Act → Learn → Plan → Hypothesize**
 - **Reason**: Read the task, understand what's needed, check dependencies
@@ -646,7 +646,7 @@ digraph if_develop {
         label="RALPH Loop (per task)";
         "REASON: Read task,\ncheck deps, plan approach" [shape=box];
         "ACT: Implement with TDD\n(superpowers:test-driven-development)" [shape=box];
-        "Dispatch evaluator\n(if-evaluator, read-only)" [shape=box];
+        "Dispatch evaluator\n(easyharness-evaluator, read-only)" [shape=box];
         "Evaluator verdict?" [shape=diamond];
         "LEARN: Parse feedback,\nidentify root cause" [shape=box];
         "Retry < 3?" [shape=diamond];
@@ -665,8 +665,8 @@ digraph if_develop {
     "Pick next task\nMark in_progress" -> "Extract task contract\n(ACs, test reqs, regression guards)";
     "Extract task contract\n(ACs, test reqs, regression guards)" -> "REASON: Read task,\ncheck deps, plan approach";
     "REASON: Read task,\ncheck deps, plan approach" -> "ACT: Implement with TDD\n(superpowers:test-driven-development)";
-    "ACT: Implement with TDD\n(superpowers:test-driven-development)" -> "Dispatch evaluator\n(if-evaluator, read-only)";
-    "Dispatch evaluator\n(if-evaluator, read-only)" -> "Evaluator verdict?";
+    "ACT: Implement with TDD\n(superpowers:test-driven-development)" -> "Dispatch evaluator\n(easyharness-evaluator, read-only)";
+    "Dispatch evaluator\n(easyharness-evaluator, read-only)" -> "Evaluator verdict?";
     "Evaluator verdict?" -> "Mark task complete" [label="PASS"];
     "Evaluator verdict?" -> "LEARN: Parse feedback,\nidentify root cause" [label="FAIL"];
     "LEARN: Parse feedback,\nidentify root cause" -> "Retry < 3?";
@@ -725,12 +725,12 @@ Follow TDD strictly (superpowers:test-driven-development):
 
 ### EVALUATE (Dispatch Evaluator)
 
-Dispatch if-evaluator as a **read-only subagent**:
+Dispatch easyharness-evaluator as a **read-only subagent**:
 
 \```
 task(
   category="unspecified-high",
-  load_skills=["if-evaluator"],
+  load_skills=["easyharness-evaluator"],
   run_in_background=false,
   description="Evaluate Task N: [name]",
   prompt=<see evaluator-dispatch-prompt.md template>
@@ -743,7 +743,7 @@ task(
 - List of changed files
 - Current retry count
 
-**Evaluator returns:** JSON verdict (see if-evaluator output format)
+**Evaluator returns:** JSON verdict (see easyharness-evaluator output format)
 
 ### LEARN (On FAIL)
 
@@ -798,7 +798,7 @@ Report to user with:
 
 After all tasks pass individually, run a final full evaluation:
 
-1. Dispatch if-evaluator with the COMPLETE contract (all tasks)
+1. Dispatch easyharness-evaluator with the COMPLETE contract (all tasks)
 2. This catches cross-task integration issues individual evaluations missed
 3. Use superpowers:verification-before-completion before claiming done
 
@@ -837,25 +837,25 @@ Inject relevant learnings into subsequent task context. This prevents repeating 
 ```markdown
 ## Prerequisites
 
-Install dependency skills before using if-develop. See the top-level Prerequisites section for full install instructions.
+Install dependency skills before using easyharness-develop. See the top-level Prerequisites section for full install instructions.
 
 **Required:**
 - [superpowers](https://github.com/obra/superpowers) — provides `test-driven-development` and `verification-before-completion`
-- **if-evaluator** — must be installed alongside if-develop
+- **easyharness-evaluator** — must be installed alongside easyharness-develop
 
 **Optional (for UI projects):**
-- [gstack](https://github.com/garrytan/gstack) — provides `browse` skill for browser QA in if-evaluator
+- [gstack](https://github.com/garrytan/gstack) — provides `browse` skill for browser QA in easyharness-evaluator
 
 ## Integration
 
 **Required skills:**
-- **if-evaluator** — Dispatched as read-only subagent after each task
+- **easyharness-evaluator** — Dispatched as read-only subagent after each task
 - **superpowers:test-driven-development** — TDD discipline during ACT phase
 - **superpowers:verification-before-completion** — Final verification before claiming done
 
 **Input:**
-- `plan.md` — from if-plan
-- `contract.md` — from if-plan
+- `plan.md` — from easyharness-plan
+- `contract.md` — from easyharness-plan
 
 **Output:**
 - Implemented code (committed per task)
@@ -867,34 +867,34 @@ Install dependency skills before using if-develop. See the top-level Prerequisit
 - Evaluator subagent: read-only + terminal (run tests/lint/build) + browser (if UI) — NO write/edit
 ```
 
-- [ ] **Step 10: Commit if-develop SKILL.md**
+- [ ] **Step 10: Commit easyharness-develop SKILL.md**
 
 ```bash
-cd /root/Github/if-harness
-git add skills/if-develop/SKILL.md
-git commit -m "feat: add if-develop skill — RALPH loop orchestration with evaluator feedback"
+cd /root/Github/easyharness
+git add skills/easyharness-develop/SKILL.md
+git commit -m "feat: add easyharness-develop skill — RALPH loop orchestration with evaluator feedback"
 ```
 
 ---
 
-### Task 5: if-develop Evaluator Dispatch Prompt Template
+### Task 5: easyharness-develop Evaluator Dispatch Prompt Template
 
 **Files:**
-- Create: `skills/if-develop/evaluator-dispatch-prompt.md`
+- Create: `skills/easyharness-develop/evaluator-dispatch-prompt.md`
 
 - [ ] **Step 1: Write the dispatch prompt template**
 
-This template is used by if-develop when dispatching if-evaluator after each task implementation.
+This template is used by easyharness-develop when dispatching easyharness-evaluator after each task implementation.
 
 ```markdown
 # Evaluator Dispatch Prompt Template
 
-Use this when dispatching if-evaluator after completing a task.
+Use this when dispatching easyharness-evaluator after completing a task.
 
 \```
 task(
   category="unspecified-high",
-  load_skills=["if-evaluator"],
+  load_skills=["easyharness-evaluator"],
   run_in_background=false,
   description="Evaluate Task N: [task name]",
   prompt="""
@@ -919,7 +919,7 @@ task(
 
     ## Your Job
 
-    Run the 4-layer evaluation defined in your if-evaluator skill:
+    Run the 4-layer evaluation defined in your easyharness-evaluator skill:
     1. Automated hard checks (tests, lint, build, regression)
     2. Stub/laziness detection
     3. Contract compliance (line-by-line AC verification)
@@ -938,9 +938,9 @@ task(
 - [ ] **Step 2: Commit evaluator-dispatch-prompt.md**
 
 ```bash
-cd /root/Github/if-harness
-git add skills/if-develop/evaluator-dispatch-prompt.md
-git commit -m "feat: add evaluator dispatch prompt template for if-develop"
+cd /root/Github/easyharness
+git add skills/easyharness-develop/evaluator-dispatch-prompt.md
+git commit -m "feat: add evaluator dispatch prompt template for easyharness-develop"
 ```
 
 ---
@@ -950,25 +950,25 @@ git commit -m "feat: add evaluator dispatch prompt template for if-develop"
 - [ ] **Step 1: Cross-reference check**
 
 Verify consistency across all three skills:
-- if-plan's contract format matches what if-evaluator expects to parse
-- if-develop's evaluator dispatch matches if-evaluator's input expectations
+- easyharness-plan's contract format matches what easyharness-evaluator expects to parse
+- easyharness-develop's evaluator dispatch matches easyharness-evaluator's input expectations
 - Status protocol consistent (PASS/FAIL, DONE/BLOCKED/NEEDS_CONTEXT)
-- Output format JSON matches between if-develop's expectations and if-evaluator's output
-- Skill cross-references use correct names (`if-plan`, `if-develop`, `if-evaluator`)
+- Output format JSON matches between easyharness-develop's expectations and easyharness-evaluator's output
+- Skill cross-references use correct names (`easyharness-plan`, `easyharness-develop`, `easyharness-evaluator`)
 
 - [ ] **Step 2: Verify all files exist with correct structure**
 
 ```bash
-find /root/Github/if-harness/skills -type f -name "*.md" | sort
+find /root/Github/easyharness/skills -type f -name "*.md" | sort
 ```
 
 Expected:
 ```
-skills/if-develop/SKILL.md
-skills/if-develop/evaluator-dispatch-prompt.md
-skills/if-evaluator/SKILL.md
-skills/if-evaluator/few-shot-examples.md
-skills/if-plan/SKILL.md
+skills/easyharness-develop/SKILL.md
+skills/easyharness-develop/evaluator-dispatch-prompt.md
+skills/easyharness-evaluator/SKILL.md
+skills/easyharness-evaluator/few-shot-examples.md
+skills/easyharness-plan/SKILL.md
 ```
 
 - [ ] **Step 3: Word count check (token efficiency)**
@@ -982,7 +982,7 @@ Target: Each SKILL.md under 1500 words (these are complex skills, but token effi
 - [ ] **Step 4: Final commit**
 
 ```bash
-cd /root/Github/if-harness
+cd /root/Github/easyharness
 git add -A
-git commit -m "feat: complete if-harness skill system (if-plan + if-develop + if-evaluator)"
+git commit -m "feat: complete easyharness skill system (easyharness-plan + easyharness-develop + easyharness-evaluator)"
 ```

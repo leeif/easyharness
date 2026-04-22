@@ -1,9 +1,9 @@
 ---
-name: if-evaluator
-description: Use when verifying implementation quality against a contract — dispatched as read-only evaluator in the if-develop RALPH loop, or standalone for post-implementation audits
+name: easyharness-evaluator
+description: Use when verifying implementation quality against a contract — dispatched as read-only evaluator in the easyharness-develop RALPH loop, or standalone for post-implementation audits
 ---
 
-# IF-Evaluator: 4-Layer Verification Engine
+# EasyHarness-Evaluator: 4-Layer Verification Engine
 
 ## Overview
 - **Purpose**: Automated acceptance testing against a contract.
