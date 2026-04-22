@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="img/easyharness_logo.png" alt="EasyHarness Logo" width="400">
+</p>
+
 # EasyHarness
 
 **Automated development harness for AI coding agents.** From requirements to verified implementation — with a calibrated evaluator that catches shortcuts.
