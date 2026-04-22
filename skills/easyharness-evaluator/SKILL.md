@@ -37,6 +37,18 @@ For each Acceptance Criterion (AC):
 - **Output**: PASS + evidence OR FAIL + reason + code reference.
 - **Check**: Flag over-engineering (features not in any AC) and verify regression guards.
 
+### Architectural Constraint Verification (if present in contract)
+If the task contract includes an **Architectural Constraints** section, verify each constraint mechanically:
+
+- **File placement**: Are new files in the specified directories? (`ls`, `find`)
+- **Import boundaries**: Do imports respect layer rules? (grep for forbidden imports)
+- **Naming conventions**: Do new symbols follow specified patterns? (grep/AST scan)
+- **Reuse requirements**: If contract says "reuse X", verify no duplicate utility was created (grep for similar function signatures)
+
+**Constraint violations are treated the same as AC failures** — any violation → FAIL with file:line reference and the constraint text.
+
+**Do NOT invent constraints.** Only check constraints explicitly listed in the contract. If no Architectural Constraints section exists, skip this sub-check entirely.
+
 ## Layer 4: Quality Scoring
 Score 0-10 with hard thresholds:
 
@@ -67,7 +79,10 @@ Structured JSON:
   "layer_results": {
     "automated_checks": { "tests": {}, "lint": {}, "build": {}, "regression": {} },
     "stub_detection": { "status": "clean"|"found", "findings": [] },
-    "contract_compliance": { "AC-1": { "status": "PASS"|"FAIL", "evidence"|"reason": "..." } },
+    "contract_compliance": {
+      "AC-1": { "status": "PASS"|"FAIL", "evidence"|"reason": "..." },
+      "constraints": { "status": "PASS"|"FAIL"|"skipped", "violations": [] }
+    },
     "quality_scores": { "functionality": 0, "regression": 0, "code_quality": 0, "test_coverage": "PASS"|"FAIL" }
   },
   "feedback": "Specific actionable feedback for generator's next attempt",

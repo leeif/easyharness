@@ -77,10 +77,11 @@ digraph G {
 ## Setup
 1. **Read plan.md**: Extract all tasks, file structure, and context. Check for tasks already marked ✅ DONE — skip those.
 2. **Read contract.md**: Extract per-task ACs, test requirements, and regression guards.
-3. **Create TodoWrite**: One todo per task from the plan. Pre-mark DONE tasks as `completed`.
-4. **Verify dependencies**: Ensure test runner, linter, and build tools exist and are functional.
-5. **Record baseline**: Run existing tests (count + status) and check lint status.
-6. **Session recovery**: If resuming (some tasks marked DONE in plan.md), verify DONE tasks still pass (quick smoke test), then continue from first incomplete task.
+3. **Read learnings**: If `docs/learnings.md` exists, read it. These are durable cross-task learnings from previous sessions.
+4. **Create TodoWrite**: One todo per task from the plan. Pre-mark DONE tasks as `completed`.
+5. **Verify dependencies**: Ensure test runner, linter, and build tools exist and are functional.
+6. **Record baseline**: Run existing tests (count + status) and check lint status.
+7. **Session recovery**: If resuming (some tasks marked DONE in plan.md), verify DONE tasks still pass (quick smoke test), then continue from first incomplete task. Learnings from prior sessions are already on disk — no context loss.
 
 ## Per-Task RALPH Loop
 
@@ -141,21 +142,62 @@ On session recovery (new session reads plan.md):
 - **Retry 3 (final)**: STOP, report task as BLOCKED to the user.
 
 ## Retry Strategy
+
 | Attempt | Strategy | Context Injection |
 |---------|----------|-------------------|
 | 1 | Direct implementation | Task + contract |
 | 2 | Apply evaluator feedback | + feedback from attempt 1 |
+| 2.5 | **Contract Amendment check** | If same AC failed twice, evaluate whether AC itself is flawed |
 | 3 | Reconsider approach | + feedback 1-2 + "consider alternative" |
 | 4+ | BLOCKED | Stop, report all findings to user |
 
 Max retries: 3 (configurable). On BLOCKED: Report task name, all collected feedback, what was tried, and suggested next steps.
 
-## Cross-Task Learnings
-After each task passes, record the following in the session context:
-- **Pattern**: What worked well for this codebase.
-- **Gotcha**: What specifically tripped you up.
-- **Codebase note**: Any discovered conventions or hidden rules.
-Inject relevant learnings into the next task's RALPH loop.
+### Contract Amendment (before attempt 3)
+
+**Trigger:** The same AC has failed on both attempt 1 and attempt 2, AND the evaluator feedback suggests the AC itself may be problematic (not just the implementation).
+
+**Signs an AC needs amendment:**
+- Evaluator says "AC is ambiguous" or "AC contradicts [other AC/existing behavior]"
+- The implementation satisfies the spirit of the AC but not its literal wording
+- The AC assumes an API/interface that doesn't match the actual codebase
+- Two different reasonable implementations both fail the AC
+
+**Process:**
+1. Pause the RALPH loop.
+2. Present to user:
+   > "AC-N.X has failed 2 consecutive attempts. Evaluator feedback suggests the AC itself may need revision:
+   > - Current AC: [exact text]
+   > - Evaluator's concern: [from feedback]
+   > - Suggested revision: [your proposed rewrite]
+   >
+   > Options: (a) Amend AC as suggested, (b) Amend AC differently, (c) Keep AC — I'll try a different approach"
+3. If user approves amendment: Update `contract.md`, commit: `git commit -m "contract: amend AC-N.X — [reason]"`
+4. Resume RALPH loop with the updated AC (reset retry count for this AC).
+
+**Why this matters (from OpenAI's harness practice):** Documents rot. A contract written during planning may not survive contact with the actual codebase. Amending early is cheaper than hitting BLOCKED and restarting.
+
+## Cross-Task Learnings (Persistent)
+
+**Learnings survive session death.** After each task (pass or fail), append to a learnings file on disk.
+
+### Write (after every task evaluation)
+Append to `docs/learnings.md` (create if missing):
+```markdown
+### Task N: [name] — [PASS|FAIL attempt K]
+- **Pattern**: What worked well for this codebase
+- **Gotcha**: What specifically tripped you up
+- **Codebase note**: Any discovered conventions or hidden rules
+- **Evaluator insight**: Key feedback from evaluator (if FAIL)
+```
+Then: `git add docs/learnings.md && git commit -m "learnings: task N [name]"`
+
+### Read (on setup and before each task)
+- On setup: Read `docs/learnings.md` if it exists. Inject relevant entries into your context.
+- Before each task REASON phase: Re-scan learnings for patterns related to the current task's files/domain.
+- On session resume: Learnings file is the durable record. No session context needed.
+
+**Why this matters (from OpenAI's harness practice):** Agent knowledge stored only in session context is lost on crash. The repo is the record system — anything the agent can't read from disk doesn't exist.
 
 ## Final Evaluation
 After all tasks pass individually:

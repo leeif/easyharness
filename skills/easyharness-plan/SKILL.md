@@ -88,12 +88,36 @@ Contract format per task:
 ## Task N: [name]
 ### Acceptance Criteria
 - [ ] AC-N.1: [Specific verifiable behavior]
+### Architectural Constraints (optional but recommended)
+- [Structural rules the implementation must follow]
 ### Test Requirements
 - What tests must exist, edge cases, integration points
 ### Regression Guard
 - Existing functionality that must NOT break
 ### Complexity: simple | medium | complex
 ```
+
+**Architectural Constraints Writing Rules:**
+
+Inspired by OpenAI's harness practice: enforce invariants, not implementations. Constraints describe WHERE code goes and WHAT boundaries it respects — not HOW to write it.
+
+Good constraints:
+- "New service must live in `src/services/`, not in `src/routes/` or `src/components/`"
+- "Must not import from UI layer (`src/components/`) into service layer"
+- "All new public functions must have JSDoc with @param and @returns"
+- "Must reuse existing `src/utils/validate.ts` validators — do not create new validation helpers"
+
+Bad constraints (too vague or too prescriptive):
+- "Follow good architecture" — what does "good" mean?
+- "Use the Strategy pattern" — prescribes implementation, not boundary
+- "Keep it clean" — subjective
+
+**When to include Architectural Constraints:**
+- Task creates new files → constrain where they go
+- Task modifies shared code → constrain what can depend on it
+- Project has ARCHITECTURE.md or layering rules → reference them
+- Task is `complex` → almost always needs constraints
+- Task is `simple` with one file → usually skip
 
 **AC Writing Rules:**
 1. Every AC verifiable by reading code + running tests (no subjective judgment)
