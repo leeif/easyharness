@@ -37,6 +37,20 @@ For each Acceptance Criterion (AC):
 - **Output**: PASS + evidence OR FAIL + reason + code reference.
 - **Check**: Flag over-engineering (features not in any AC) and verify regression guards.
 
+### SDD Spec Verification (if sdd-spec.md provided)
+If the evaluator dispatch includes an SDD spec, verify each scenario:
+- For each scenario's **Given/When/Then**: confirm the implementation handles the exact precondition, action, and expected outcome described.
+- Cross-reference with ACs: every AC must have at least one passing scenario. Flag any AC without a matching scenario.
+- **Verification method alignment**: if scenario says "unit test", check the test exists. If "browser QA", run browser verification. If "API test", call the endpoint.
+- **SDD compliance in output**: add `sdd_compliance` to the contract_compliance section:
+  ```json
+  "sdd_compliance": {
+    "scenario-N.1": { "status": "PASS"|"FAIL", "evidence"|"reason": "..." },
+    ...
+  }
+  ```
+- Any scenario FAIL → overall verdict FAIL (same weight as AC failure).
+
 ### Architectural Constraint Verification (if present in contract)
 If the task contract includes an **Architectural Constraints** section, verify each constraint mechanically:
 

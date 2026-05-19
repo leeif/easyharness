@@ -15,6 +15,9 @@ task(
     ## Contract
     [PASTE full contract section for this task from contract.md]
 
+    ## SDD Spec Scenarios
+    [PASTE all scenarios for this task from sdd-spec.md]
+
     ## Changed Files
     [List all files created or modified]
 
@@ -29,7 +32,7 @@ task(
     Run 4-layer evaluation (easyharness-evaluator skill):
     1. Automated hard checks (tests, lint, build, regression)
     2. Stub/laziness detection
-    3. Contract compliance (line-by-line AC verification)
+    3. Contract compliance (line-by-line AC verification) + SDD spec scenario verification
     4. Quality scoring
     [If contract has UI ACs]: Also run browser QA.
 
@@ -39,6 +42,6 @@ task(
 )
 
 ## Notes
-- Always paste the contract directly; do not expect the evaluator to find the right file or section.
+- Always paste the contract AND SDD spec scenarios directly; do not expect the evaluator to find the right file or section.
 - Include the full retry context so the evaluator knows what failed previously.
 - Evaluator has NO write/edit permissions — read-only + terminal + browser only.

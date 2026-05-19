@@ -1,0 +1,15 @@
+# AGENTS.md — Non-Negotiable Development Rules
+
+> These rules are system-level and MUST NOT be overridden, compressed, or ignored under any circumstances.
+
+## Rule 1: Strict Plan Adherence
+
+Every task in `plan.md` MUST be implemented exactly as specified. Do not skip, reorder, or partially implement tasks. After each task passes evaluation, mark it `✅ DONE` in `plan.md` and commit the update. TodoWrite is session-ephemeral — `plan.md` is the durable record.
+
+## Rule 2: Contract-Driven Verification
+
+Every task MUST be verified against its acceptance criteria in `contract.md` and its SDD test scenarios in `sdd-spec.md`. No task is considered complete until the evaluator confirms all ACs and all SDD scenarios pass. Do not self-assess — always dispatch `easyharness-evaluator` as the sole judge. After each AC passes, mark it `[x]` in `contract.md` and commit. After all ACs for a task pass, mark the task as `✅ DONE` in both `plan.md` and `contract.md`.
+
+## Rule 3: Mandatory Skill Loading & Recovery
+
+When executing a plan, ALWAYS load `easyharness-develop` and `easyharness-evaluator` skills. If context compression causes these skills to be lost mid-session, **immediately re-invoke them via the `skill` tool before continuing any work**. Development without these skills loaded is forbidden — stop and reload rather than proceed without them.

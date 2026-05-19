@@ -9,7 +9,7 @@ description: Use when starting a new feature or project — explores requirement
 - Purpose: Turn vague requirements into a plan + contract that easyharness-develop can execute autonomously
 - Outputs: plan.md (implementation plan) + contract.md (per-task acceptance criteria)
 - Core principle: "Every acceptance criterion must be verifiable without human judgment"
-- Flow: explore → design → decompose → contract → self-review
+- Flow: explore → design → decompose → contract → SDD spec → self-review
 
 ## Prerequisites
 - Recommended: superpowers (for brainstorming and writing-plans patterns)
@@ -137,6 +137,64 @@ Bad constraints (too vague or too prescriptive):
 - "POST /api/users returns 400 with { error: 'Email required' } when email is empty"
 - "User list renders max 20 items per page with 'Load more' button when total > 20"
 
+## Phase 3.5: SDD Spec Generation (Specification-Driven Development)
+
+After generating the contract, create an SDD spec file with concrete test scenarios for each task. These scenarios bridge the gap between abstract ACs and real-world verification.
+
+### SDD Spec Format
+
+For each task, write one or more scenarios in Given/When/Then format:
+
+```
+## Task N: [name]
+
+### Scenario N.1: [descriptive scenario name]
+- **Given**: [precondition — system state, data setup, environment]
+- **When**: [action — API call, user interaction, function invocation with specific inputs]
+- **Then**: [expected outcome — exact response, state change, side effect]
+- **Verification method**: [unit test | integration test | API test | browser QA | manual check]
+
+### Scenario N.2: [edge case or error scenario]
+- **Given**: ...
+- **When**: ...
+- **Then**: ...
+- **Verification method**: ...
+```
+
+### SDD Spec Writing Rules
+
+1. **One scenario per behavior** — don't combine happy path and error case in one scenario
+2. **Concrete values** — use real example data, not placeholders: `email: "test@example.com"` not `email: "<valid email>"`
+3. **Cover the AC** — every AC in the contract MUST have at least one corresponding scenario
+4. **Include failure scenarios** — for every happy path, write at least one failure/edge case scenario
+5. **Specify verification method** — how will the evaluator check this? Unit test, integration test, browser QA, or API call?
+6. **Browser QA scenarios** — if a scenario requires browser verification, specify: URL path, interaction steps, and expected visual state
+
+### User Confirmation (MANDATORY)
+
+Present the SDD spec to the user for review BEFORE saving. Format:
+
+> "Here are the test scenarios for each task. Please review:
+>
+> **Task 1: [name]**
+> - Scenario 1.1: [one-line summary] — [verification method]
+> - Scenario 1.2: [one-line summary] — [verification method]
+>
+> **Task 2: [name]**
+> - ...
+>
+> Any scenarios to add, remove, or modify?"
+
+Only save after user confirms. The user may:
+- Add scenarios the agent missed
+- Remove scenarios they consider unnecessary
+- Modify expected outcomes
+- Change verification methods
+
+### Output
+
+Save as: `docs/plans/YYYY-MM-DD-<name>-sdd-spec.md`
+
 ## Phase 4: Contract Self-Review
 Before presenting to user:
 1. Verifiability: Can each AC be checked by code + test? Rewrite if requires human judgment
@@ -146,14 +204,28 @@ Before presenting to user:
 5. Testability: Can you imagine the test for each AC? If not, AC is too vague.
 
 ## Output
-Save two files:
+Save three files:
 - `docs/plans/YYYY-MM-DD-<name>.md` — Implementation plan
 - `docs/plans/YYYY-MM-DD-<name>-contract.md` — Contract
+- `docs/plans/YYYY-MM-DD-<name>-sdd-spec.md` — SDD test scenarios
+
+### AGENTS.md Verification (MANDATORY)
+After saving plan and contract, check the project root for `AGENTS.md`. If it does not exist, copy from the example template at `@AGENTS.md.example` and place it at the project root. If it exists, verify it contains all three rules below — append any missing ones.
+
+Required rules:
+
+1. **Strict Plan Adherence** — Every task in `plan.md` MUST be implemented exactly as specified. After each task passes evaluation, mark it `✅ DONE` in `plan.md` and commit. TodoWrite is session-ephemeral — `plan.md` is the durable record.
+2. **Contract-Driven Verification** — Every task MUST be verified against its acceptance criteria in `contract.md`. After each AC passes, mark it `[x]` in `contract.md`. After all ACs for a task pass, mark the task `✅ DONE` in both `plan.md` and `contract.md`, then commit. Do not self-assess — always dispatch `easyharness-evaluator`.
+3. **Mandatory Skill Loading & Recovery** — Always load `easyharness-develop` and `easyharness-evaluator` skills. If context compression causes skill loss, immediately re-invoke via `skill` tool before continuing.
+
+**This file is system-level injected and survives context compression — it is the last line of defense for process integrity.**
 
 After saving, prompt user:
-> "Plan and contract saved. Please review both files before we proceed:
+> "Plan, contract, and SDD spec saved. Please review all files before we proceed:
 > - Plan: `<path>`
 > - Contract: `<path>`
+> - SDD Spec: `<path>`
+> - AGENTS.md: verified ✓
 > Ready to start implementation with easyharness-develop?"
 
 ## Common Mistakes
@@ -169,4 +241,5 @@ After saving, prompt user:
 | Exploration | Validated requirements | One question at a time, prefer multiple choice |
 | Decomposition | Task list with file paths | Bite-sized, TDD-friendly, complexity-tagged |
 | Contract | Per-task ACs | Machine-verifiable, no subjective judgment |
-| Self-Review | Verified contract | Every AC must be testable |
+| SDD Spec | Per-task test scenarios | Given/When/Then with concrete values, user-confirmed |
+| Self-Review | Verified contract + spec | Every AC must be testable, every AC has a scenario |
